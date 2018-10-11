@@ -7,9 +7,17 @@ from urllib2 import install_opener
 from urllib2 import build_opener
 from urllib2 import HTTPSHandler
 
+import urllib
+
 import ssl
 import sys
 import base64
+
+import httplib
+import urllib2
+
+
+
 
 class configWrapper:
 	def __init__(self, config):
@@ -26,15 +34,25 @@ class configWrapper:
 class RestApiClient:
 
     # Constructor for the RestApiClient Class
-    def __init__(self, config, version=None):
-
+    def __init__(self, config, debug = True, version=None):
+       
+        
         self.config = configWrapper(config)
 
+        if debug:
+            self.debug = 1
+            httplib.debuglevel = self.debug
+            httplib.HTTPConnection.debuglevel = self.debug
+        else:
+            self.debug = 0
+            
         self.headers = {'Accept': 'application/json'}
         if version is not None:
             self.headers['Version'] = version
         if self.config.has_config_value('auth_token'):
+            
             self.headers['SEC'] = self.config.get_config_value('auth_token')
+            
         elif (self.config.has_config_value('username') and
               self.config.has_config_value('password')):
             username = self.config.get_config_value('username')
@@ -107,14 +125,28 @@ class RestApiClient:
                 context.set_default_verify_paths()
 
         install_opener(build_opener(
-            HTTPSHandler(context=context, check_hostname=check_hostname)))
+            HTTPSHandler(context=context, check_hostname=check_hostname, debuglevel=self.debug)))
 
+    def dump_request(self, client, path, method, headers=None):
+        ip = client.get_server_ip()
+        base_uri = client.get_base_uri()
+    
+        header_copy = client.get_headers().copy()
+        if headers is not None:
+            header_copy.update(headers)
+    
+        url = 'https://' + ip + base_uri + path
+        print('Sending a ' + method + ' request to:')
+        print(url)
+        print('with these headers:')
+        print(header_copy)
+        print()
     # This method is used to set up an HTTP request and send it to the server
     def call_api(self, endpoint, method, headers=None, params=[], data=None,
                  print_request=False):
 
         path = self.parse_path(endpoint, params)
-
+        #print ("path: " + path)
         # If the caller specified customer headers merge them with the default
         # headers.
         actual_headers = self.headers.copy()
@@ -130,10 +162,11 @@ class RestApiClient:
 
         # Print the request if print_request is True.
         if print_request:
-            SampleUtilities.pretty_print_request(self, path, method,
-                                                 headers=actual_headers)
+            self.dump_request(self, path, method,
+                                                 headers=actual_headers)                                               
 
         try:
+           
             response = urlopen(request, data)
 
             response_info = response.info()
