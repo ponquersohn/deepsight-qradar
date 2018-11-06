@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 1. log into qradar using ssh and
 # mkdir deepsight
 # cd deepsight/
@@ -22,3 +23,8 @@
 
 start the damn thing
 # python deepsight2qradar.py
+=======
+# deepsight-qradar
+
+readme
+>>>>>>> abdb1f1c0127fb942b1c54d56dd59f39324416f2
