@@ -253,13 +253,12 @@ class qradarAPI:
         headers={"Content-Type": "application/json"}
         response = self.call( tab, "POST", headers=headers, data=data, print_request=print_request, print_response=print_response)
         if (response.code == 409):
-            self.logger.debug(self.dump_response(response))
+            #self.logger.debug(self.dump_response(response))
             print("Data already exists, using existing data")
         elif(response.code >= 400):
             print("An error occurred setting up sample data:")
             self.logger.debug(self.dump_response(response))
             sys.exit(1)
-        #self.logger.debug(self.dump_response(response))
         return response
 
     def dump_response(self,response):

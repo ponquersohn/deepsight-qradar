@@ -78,9 +78,9 @@ def downloadDeepsightFeed(feeds, feed_id, tmp_path, overwrite=False, deleteold=F
 
 def doTheDirtyWork(config, feeds, mapping):
     logger.debug("Working on mapping {}".format(mapping))
-    #data = downloadDeepsightFeed(feeds, mapping["id"], config["global"]["tmppath"])
-    file = open("temp/31_4463", "r") 
-    data = file.read()
+    data = downloadDeepsightFeed(feeds, mapping["id"], config["global"]["tmppath"])
+    #file = open("temp/46_4464", "r") 
+    #data = file.read()
     fieldstoadd=[]
     key_to_type={}
     jfm = []
@@ -90,14 +90,15 @@ def doTheDirtyWork(config, feeds, mapping):
         
         for field in fieldmap:
             # [{"element_type": "IP", "key_name": "Authorization_Server_IP_Secure"}]
-            print (field)
+            #print (field)
             fieldstoadd+=[field[2]]
             jfm+=[{"element_type":field[1], "key_name":field[2]}]
             key_to_type[field[2]] = field[1]
     
+    
     qr = qradarAPI(config["qradar"])
     
-    ret = qr.delReferenceTable(mapping["referencemap"],waitForDelete=True)
+    #ret = qr.delReferenceTable(mapping["referencemap"],waitForDelete=True)
     ret = qr.addReferenceTable(mapping["referencemap"], jfm)
     
     ret = qr.listReferenceTables()
@@ -106,17 +107,13 @@ def doTheDirtyWork(config, feeds, mapping):
 
     csvdata = csv.reader(data)
     csvheader = csvdata.next()
-    csvdata = csv.DictReader(data[1:2], csvheader)
+    csvdata = csv.DictReader(data[1:], csvheader)
 
     intoq = {}
     for row in csvdata:
         outer = row[mapping["outer_key"]]
         new_row = {}
         for key in fieldstoadd:
-            # fixing empty NUM rows
-            #print ("Key: " + key)
-            #print ("row[key]: " + row[key])
-            #print ("Key to type: " + key_to_type[key])
             if key_to_type[key] == "NUM" and row[key] == "":
 
                 row[key] = "-1"
@@ -125,7 +122,6 @@ def doTheDirtyWork(config, feeds, mapping):
         intoq[outer]=new_row
         
     logger.debug("Spliting into chunks")
-    # print (intoq)
     idx = 0
     length = len(intoq)
     chunk_size = 200
@@ -135,8 +131,7 @@ def doTheDirtyWork(config, feeds, mapping):
         if rest < 0: 
             rest = 0
         print ('\t# - ' + str(int(idx) + 1) + ' Ingesting ' + str(len(chunk)) + ' items... still '+str(rest) + " left") 
-        #print (json.dumps(chunk))
-        qr.bulkLoadReferenceTable(mapping["referencemap"],json.dumps(chunk),print_request=True)
+        qr.bulkLoadReferenceTable(mapping["referencemap"],json.dumps(chunk),print_request=False)
         idx=idx+1
         
     
