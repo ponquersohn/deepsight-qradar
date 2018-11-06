@@ -1,24 +1,70 @@
 {
 	"global": {
-		"tmppath": "/root/deepsight/qradar/temp"
+		"tmppath": "/root/deepsight/qradar/temp",
+        "debug": "0"
 	},
 	"deepsight": {
-		"username": "<username>",
-		"password": "<password>"
+		"username": "",
+		"password": ""
 	},
 	"qradar": {
-		"server_ip": "<ip>",
-		"auth_token": "<token>",
-		"certificate_file": "<path to.pem>"
+		"server_ip": "<qradarip>",
+        #openssl s_client -showcerts -connect <qradarIP>:443 </dev/null 2>/dev/null|openssl x509 -outform PEM > qradar.pem
+		"certificate_file": "/root/deepsight/qradar/qradar.pem",
+        "username": "",
+        "password": ""
 	},
 
 	"mapping": [
 		{
 		"id": "25", 
-		"referencemap": "Deepsight_IP_Reputation_Attack",
+		"referencemap": "Deepsight_Advanced_IP_Reputation_Attack",
 		"outer_key": "address",
-		"mappingfile": "mappings/mapping.csv"
+		"mappingfile": "mappings/feed_25.csv"
+		},
+        {
+		"id": "28", 
+		"referencemap": "Deepsight_Advanced_IP_Reputation_Bot",
+		"outer_key": "address",
+		"mappingfile": "mappings/feed_28.csv"
+		},
+        {
+		"id": "31", 
+		"referencemap": "Deepsight_Advanced_IP_Reputation_CnC",
+		"outer_key": "address",
+		"mappingfile": "mappings/feed_31.csv"
+		},
+        {
+        "id": "34", 
+		"referencemap": "Deepsight_Advanced_IP_Reputation_Fraud",
+		"outer_key": "address",
+		"mappingfile": "mappings/feed_34.csv"
+		},
+        {
+		"id": "37", 
+		"referencemap": "Deepsight_Advanced_IP_Reputation_Malware",
+		"outer_key": "address",
+		"mappingfile": "mappings/feed_37.csv"
+		},
+        {
+        "id": "40", 
+		"referencemap": "Deepsight_Advanced_IP_Reputation_Phishing",
+		"outer_key": "address",
+		"mappingfile": "mappings/feed_40.csv"
+		},
+        {
+		"id": "43", 
+		"referencemap": "Deepsight_Advanced_IP_Reputation_Spam",
+		"outer_key": "address",
+		"mappingfile": "mappings/feed_43.csv"
 		}
+        #,        
+        #{
+		#"id": "46", 
+		#"referencemap": "Deepsight_Advanced_URL_Reputation_Attack",
+		#"outer_key": "domain_name",
+		#"mappingfile": "mappings/feed_46.csv"
+		#}
 	]
 }
 
