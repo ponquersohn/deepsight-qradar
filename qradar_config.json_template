@@ -1,6 +1,6 @@
 {
 	"global": {
-		"tmppath": "/root/deepsight/qradar/temp",
+		"tmppath": "<tempfile>",
         "debug": "0"
 	},
 	"deepsight": {
@@ -10,7 +10,7 @@
 	"qradar": {
 		"server_ip": "<qradarip>",
         #openssl s_client -showcerts -connect <qradarIP>:443 </dev/null 2>/dev/null|openssl x509 -outform PEM > qradar.pem
-		"certificate_file": "/root/deepsight/qradar/qradar.pem",
+		"certificate_file": <path_tocert.pem>",
         "username": "",
         "password": ""
 	},
@@ -58,13 +58,42 @@
 		"outer_key": "address",
 		"mappingfile": "mappings/feed_43.csv"
 		}
-        #,        
-        #{
-		#"id": "46", 
-		#"referencemap": "Deepsight_Advanced_URL_Reputation_Attack",
-		#"outer_key": "domain_name",
-		#"mappingfile": "mappings/feed_46.csv"
-		#}
+        ,        
+        {
+		"id": "46", 
+		"referencemap": "Deepsight_Advanced_URL_Reputation_Attack",
+		"outer_key": "domain_name",
+		"mappingfile": "mappings/feed_46.csv"
+		}
+        ,
+        {
+		"id": "49", 
+		"referencemap": "Deepsight_Advanced_URL_Reputation_CnC",
+		"outer_key": "domain_name",
+		"mappingfile": "mappings/feed_49.csv"
+		}
+        ,
+        {
+		"id": "52", 
+		"referencemap": "Deepsight_Advanced_URL_Reputation_Fraud",
+		"outer_key": "domain_name",
+		"mappingfile": "mappings/feed_52.csv"
+		}
+        ,
+        {
+		"id": "55", 
+		"referencemap": "Deepsight_Advanced_URL_Reputation_Malware",
+		"outer_key": "domain_name",
+		"mappingfile": "mappings/feed_55.csv"
+		}
+        ,
+        {
+		"id": "58", 
+		"referencemap": "Deepsight_Advanced_URL_Reputation_Phishing",
+		"outer_key": "domain_name",
+		"mappingfile": "mappings/feed_58.csv"
+		}
+
 	]
 }
 

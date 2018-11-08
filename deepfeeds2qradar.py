@@ -18,7 +18,7 @@ from pprint import pformat
 from pprint import pprint
 
 from deepsight_feeds import DeepSightFeeds, FeedBaseException
-
+from config_wrapper import readConfiguration
 from itertools import islice
 
 def chunks(data, SIZE=3000):
@@ -26,20 +26,6 @@ def chunks(data, SIZE=3000):
     for i in xrange(0, len(data), SIZE):
         yield {k:data[k] for k in islice(it, SIZE)}
 
-def readConfiguration(configFile):
-    funName = "readConfiguration:"
-    logging.debug(funName + " Start")
-    with open(configFile) as data_file:
-        data = ""
-        for line in data_file:
-            li = line.strip()
-            if not li.startswith("#"):
-                data += "{}\r\n".format(li)
-        data = json.loads(data)
-        config = dict((k.lower(), v) for k, v in data.iteritems())
-    logging.debug(pformat(config))
-    logging.debug(funName + " End")
-    return config
 
 def downloadDeepsightFeed(feeds, feed_id, tmp_path, overwrite=False, deleteold=False, overwright=False):
     # check latest file for feed_id
@@ -98,10 +84,11 @@ def doTheDirtyWork(config, feeds, mapping):
     
     qr = qradarAPI(config["qradar"])
     
-    #ret = qr.delReferenceTable(mapping["referencemap"],waitForDelete=True)
+    if config["qradar"]["remove_previous_table"] == '1':
+        ret = qr.delReferenceTable(mapping["referencemap"],waitForDelete=True)
     ret = qr.addReferenceTable(mapping["referencemap"], jfm)
     
-    ret = qr.listReferenceTables()
+    #ret = qr.listReferenceTables()
     
     data = data.split('\n')
 
